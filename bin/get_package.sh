@@ -1,7 +1,7 @@
 #!/bin/bash
 
 script_name=$(basename "$0")
-package_name="phantomjs"
+package_name="gdrive"
 
 function usage(){
 cat <<_EOT_
@@ -46,11 +46,11 @@ architecture="$1"
 file_name="$2"
 
 if [ "$architecture" = "32bit" ]; then
-  url=$(awk '/i686/ {print $2}' < "$file_name")
-  wget "$url"
+  url=$(awk '/386/ {print $2}' < "$file_name")
+  firefox "$url" &
 elif [ "$architecture" = "64bit" ]; then
-  url=$(awk '/x86_64/ {print $2}' < "$file_name")
-  wget "$url"
+  url=$(awk '/x64/ {print $2}' < "$file_name")
+  firefox "$url" &
 else
   exit 2
 fi
