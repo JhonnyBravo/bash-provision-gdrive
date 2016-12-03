@@ -1,7 +1,7 @@
 #!/bin/bash
 
 script_name=$(basename "$0")
-package_name="phantomjs"
+package_name="gdrive"
 dst_path="/usr/local/bin"
 
 i_flag=0
@@ -10,7 +10,7 @@ u_flag=0
 function usage(){
 cat <<_EOT_
 NAME
-  ${script_name} -i architecture
+  ${script_name} -i architecture src_directory
   ${script_name} -u
   ${script_name} -h
 
@@ -18,7 +18,7 @@ DESCRIPTION
   ${package_name} をインストール / アンインストールします。
 
 OPTIONS
-  -i architecture
+  -i architecture src_directory
     OS のアーキテクチャに合わせたパッケージをインストールします。
 
     有効な値:
@@ -36,18 +36,15 @@ exit 1
 }
 
 function install_package(){
-  package_dir=$(find . -name "phantomjs*${1}*" | sed -e "s/.tar.bz2//")
-  tar jxf "${package_dir}.tar.bz2"
-
-  src_path="${package_dir}/bin/${package_name}"
-  install "$src_path" "$dst_path"
-
-  rm "${package_dir}.tar.bz2"
-  rm -R "$package_dir"
+  src_path=$(find "$2" -name "gdrive-linux-${1}")
+  install "$src_path" "${dst_path}/${package_name}"
+  install sync_gdrive.sh "$dst_path"
+  rm "$src_path"
 }
 
 function uninstall_package(){
   rm "${dst_path}/${package_name}"
+  rm "${dst_path}/sync_gdrive.sh"
 }
 
 while getopts "i:uh" option
@@ -71,11 +68,12 @@ done
 if [ $i_flag -eq 1 ]; then
   shift $((OPTIND - 2))
   architecture="$1"
+  file_name="$2"
 
   if [ "$architecture" = "32bit" ]; then
-    install_package "i686"
+    install_package "386" "$file_name"
   elif [ "$architecture" = "64bit" ]; then
-    install_package "x86_64"
+    install_package "x64" "$file_name"
   fi
 elif [ $u_flag -eq 1 ]; then
   uninstall_package
