@@ -20,6 +20,7 @@ OPTIONS
 
     * 32bit
     * 64bit
+    * rpi
 
   file_name
     URL のリストが記載されたファイルのパスを指定します。
@@ -50,6 +51,9 @@ if [ "$architecture" = "32bit" ]; then
   firefox "$url" &
 elif [ "$architecture" = "64bit" ]; then
   url=$(awk '/x64/ {print $2}' < "$file_name")
+  firefox "$url" &
+elif [ "$architecture" = "rpi" ]; then
+  url=$(awk '/rpi/ {print $2}' < "$file_name")
   firefox "$url" &
 else
   exit 2
