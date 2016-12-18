@@ -25,6 +25,7 @@ OPTIONS
 
     * 32bit
     * 64bit
+    * rpi
 
   -u
     パッケージをアンインストールします。
@@ -74,6 +75,8 @@ if [ $i_flag -eq 1 ]; then
     install_package "386" "$file_name"
   elif [ "$architecture" = "64bit" ]; then
     install_package "x64" "$file_name"
+  elif [ "$architecture" = "rpi" ]; then
+    install_package "rpi" "$file_name"
   fi
 elif [ $u_flag -eq 1 ]; then
   uninstall_package
